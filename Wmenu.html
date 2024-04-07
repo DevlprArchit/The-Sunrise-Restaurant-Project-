@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurant Menu - The Sunrise Restaurant</title>
+  <link rel="icon" type="image/x-icon" size="15x15" href="logo new sunrise.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    /* Header Styles */
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      color: #333;
+    }
+
+    /* Container Styles */
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* Menu Item Styles */
+    .menu-item {
+      border: 1px solid #ccc;
+      margin: 10px;
+      padding: 10px;
+      width: 200px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .menu-item:hover {
+      transform: scale(1.05);
+    }
+
+    .menu-item img {
+      max-width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+
+    /* Cart Styles */
+    #cart-items {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    #cart-items li {
+      margin-bottom: 5px;
+    }
+
+    #total {
+      font-weight: bold;
+    }
+
+    #order-history {
+      height: 400px; /* Set a specific height for the container */
+      overflow-y: auto; /* Add this property to enable vertical scrolling */
+      display: none; /* Initially hide the order history */
+    }
+
+    #order-history button {
+      width: 80%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #navbar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      background-color: #333;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 2;
+    }
+
+    #navbar h2 {
+      margin-bottom: 0;
+    }
+
+    /* Make sure the cart content doesn't overlap with the main content */
+    .main-content {
+      margin-top: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #cart {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #fff;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      z-index: 1;
+      margin-top: 20px;
+    }
+
+    #cart button {
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="navbar">
+    <h2>Restaurant Menu - The Sunrise Restaurant</h2>
+  </div>
+<br>
+<br>
+<br>
+  <div class="main-content">
+    <h1>Menu Contents</h1>
+    <button onclick="toggleOrderHistory()">Click To Open / Close Order History</button>
+    <div id="order-history">
+      <h2>Order History</h2>
+      <ul id="order-history-list"></ul>
+      <button onclick="clearOrderHistory()">Clear Order History</button>
+    </div>
+
+    <div id="cart">
+      <h2>Menu-Cart The Sunrise Restaurant</h2>
+      <ul id="cart-items"></ul>
+      <p>Total: ₹<span id="total">0</span></p>
+      <button onclick="placeOrder()">Place Order</button>
+    </div>
+
+    <div class="container" id="menu">
+      <!-- Menu items will be dynamically added here using JavaScript -->
+    </div>
+  </div>
+
+  <script>
+    function toggleOrderHistory() {
+      const orderHistory = document.getElementById('order-history');
+      orderHistory.style.display = orderHistory.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Initial rendering of order history
+    renderOrderHistory();
+    const menu = [
+      { id: 1, name: 'Masala Omlette', price: 80, image: '91892133.webp' },
+      { id: 2, name: 'Chicken Kima', price: 180, image: '91892180.webp' },
+      { id: 3, name: 'Chole Kulche', price: 120, image: '91892153.webp' },
+      { id: 4, name: 'Shahi Bhel Puri', price: 40, image: '91890062.webp' },
+      { id: 5, name: 'Chole Bhature', price: 100, image: '91892164.webp' },
+      { id: 6, name: 'Aloo Puri', price: 80, image: '91892119.webp' },
+      { id: 7, name: 'Paneer Sandwich', price: 70, image: '91892087.webp' },
+      { id: 8, name: 'Shahi Poha', price: 30, image: '91892189.webp' },
+      { id: 9, name: 'Mix Veg Parantha', price: 32, image: '91892173.webp' },
+      { id: 10, name: 'Non Veg Thali', price: 380, image: '1-4.jpg' },
+      { id: 11, name: 'South India Special', price: 240, image: 'IMG_9729.jpg' },
+      { id: 12, name: 'Special South Weeding Meal', price: 345, image: 'IMG_9291_phixr.jpg' },
+      { id: 13, name: 'Punjabi Thali', price: 250, image: '5.jpg' },
+      { id: 14, name: 'Northern Thali', price: 255, image: '1.jpg' },
+    ];
+
+    const cart = [];
+
+    function renderMenu() {
+      const menuContainer = document.getElementById('menu');
+
+      menu.forEach(item => {
+        const menuItem = document.createElement('div');
+        menuItem.classList.add('menu-item');
+        menuItem.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <p>${item.name}</p>
+          <p>₹${item.price}</p>
+          <button onclick="addToCart(${item.id})">Add to Cart</button>
+        `;
+        menuContainer.appendChild(menuItem);
+      });
+    }
+
+    function clearOrderHistory() {
+      // Clear order history from local storage
+      localStorage.removeItem('orderHistory');
+      renderOrderHistory();
+    }
+
+    function addToCart(itemId) {
+      const selectedItem = menu.find(item => item.id === itemId);
+      cart.push(selectedItem);
+
+      renderCart();
+    }
+
+    function renderCart() {
+      const cartItemsContainer = document.getElementById('cart-items');
+      const totalElement = document.getElementById('total');
+      let total = 0;
+
+      // Clear the cart items container before rendering
+      cartItemsContainer.innerHTML = '';
+
+      cart.forEach(item => {
+        const cartItem = document.createElement('li');
+        cartItem.innerHTML = `${item.name} - ₹${item.price}`;
+        cartItemsContainer.appendChild(cartItem);
+
+        total += item.price;
+      });
+
+      totalElement.textContent = total.toFixed(2);
+    }
+
+    function placeOrder() {
+      // Save the order to order history
+      const order = {
+        id: new Date().getTime(), // You can use a more sophisticated ID generation logic
+        items: cart.slice(),      // Create a copy of the cart items
+        total: cart.reduce((acc, item) => acc + item.price, 0), // Calculate total
+      };
+
+      saveOrderHistory(order);
+
+      // Clear the cart after placing the order
+      cart.length = 0;
+      renderCart();
+      renderOrderHistory();
+
+      alert('Order placed successfully! Tracking Id Will Be Generated Shortly Keep Loving <3');
+      // Additional logic (if needed) can be added here, such as sending the order to a server.
+    }
+
+    function renderOrderHistory() {
+      const orderHistoryContainer = document.getElementById('order-history-list');
+      orderHistoryContainer.innerHTML = '';
+
+      // Retrieve order history from local storage
+      const orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
+
+      orderHistory.forEach(order => {
+        const orderItem = document.createElement('li');
+        orderItem.innerHTML = `
+          <p>Order ID: ${order.id}</p>
+          <p>Total: ₹${order.total.toFixed(2)}</p>
+          <ul>
+            ${order.items.map(item => `<li>${item.name} - ₹${item.price}</li>`).join('')}
+          </ul>
+        `;
+        orderHistoryContainer.appendChild(orderItem);
+      });
+    }
+
+    function saveOrderHistory(order) {
+      // Retrieve existing order history from local storage
+      const orderHistory = JSON.parse(localStorage.getItem('orderHistory')) || [];
+
+      // Add the new order to the history
+      orderHistory.push(order);
+
+      // Save the updated order history to local storage
+      localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+    }
+
+    // Initial rendering of menu and order history
+    renderMenu();
+    renderOrderHistory();
+  </script>
+
+</body>
+
+</html>
